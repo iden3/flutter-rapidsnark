@@ -1,19 +1,153 @@
 import Flutter
 import UIKit
 
-public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "flutter_rapidsnark", binaryMessenger: registrar.messenger())
-    let instance = FlutterRapidsnarkPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
+import rapidsnark
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
-    default:
-      result(FlutterMethodNotImplemented)
+public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "flutter_rapidsnark", binaryMessenger: registrar.messenger())
+        let instance = FlutterRapidsnarkPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
     }
-  }
+    
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case "groth16Prove":
+            callGroth16Prove(call: call, result: result)
+        case "groth16ProveWithZKeyFilePath":
+            callGroth16ProveWithZKeyFilePath(call: call, result: result)
+        case "groth16PublicSizeForZkeyBuf":
+            callGroth16PublicSizeForZkeyBuf(call: call, result: result)
+        case "groth16PublicSizeForZkeyFilePath":
+            callGroth16PublicSizeForZkeyFilePath(call: call, result: result)
+        case "groth16Verify":
+            callGroth16Verify(call: call, result: result)
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    private func callGroth16Prove(call: FlutterMethodCall, result: FlutterResult) {
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let zkey = (args["zkey"] as! FlutterStandardTypedData).data
+        let witness = (args["witness"] as! FlutterStandardTypedData).data
+
+        let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
+        let publicBufferSize = (args["publicBufferSize"] as! NSNumber).intValue
+        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
+        
+        do {
+            let proof = try groth16Prove(
+                zkey: zkey,
+                witness: witness,
+                proofBufferSize: proofBufferSize,
+                publicBufferSize: publicBufferSize,
+                errorBufferSize: errorBufferSize
+            )
+            
+            result([
+                "proof": proof.proof,
+                "publicSignals": proof.publicSignals
+            ])
+        } catch is RapidsnarkProverError {
+            result(FlutterError(code: "groth16Prove", message: "Prover error", details: nil))
+        } catch {
+            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: nil))
+        }
+    }
+
+    private func callGroth16ProveWithZKeyFilePath(call: FlutterMethodCall, result: FlutterResult) {
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let zkeyPath = args["zkeyPath"] as! String
+        let witness = (args["witness"] as! FlutterStandardTypedData).data
+
+        let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
+        let publicBufferSize = (args["publicBufferSize"] as! NSNumber).intValue
+        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
+
+        do {
+            let proof = try groth16ProveWithZKeyFilePath(
+                zkeyPath: zkeyPath,
+                witness: witness,
+                proofBufferSize: proofBufferSize,
+                publicBufferSize: publicBufferSize,
+                errorBufferSize: errorBufferSize
+            )
+
+            result([
+                "proof": proof.proof,
+                "publicSignals": proof.publicSignals
+            ])
+        } catch is RapidsnarkProverError {
+            result(FlutterError(code: "groth16ProveWithZKeyFilePath", message: "Prover error", details: nil))
+        } catch {
+            result(FlutterError(code: "groth16ProveWithZKeyFilePath", message: "Unknown error", details: nil))
+        }
+    }
+
+    private func callGroth16PublicSizeForZkeyBuf(call: FlutterMethodCall, result: FlutterResult) {
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let zkey = (args["zkey"] as! FlutterStandardTypedData).data
+
+        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
+
+        do {
+            let publicSize = try groth16PublicSizeForZkeyBuf(
+                zkey: zkey,
+                errorBufferSize: errorBufferSize
+            )
+
+            result(publicSize)
+        } catch is RapidsnarkProverError {
+            result(FlutterError(code: "groth16PublicSizeForZkeyBuf", message: "Prover error", details: nil))
+        } catch {
+            result(FlutterError(code: "groth16PublicSizeForZkeyBuf", message: "Unknown error", details: nil))
+        }
+    }
+
+    private func callGroth16PublicSizeForZkeyFilePath(call: FlutterMethodCall, result: FlutterResult) {
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let zkeyPath = args["zkeyPath"] as! String
+
+        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
+
+        do {
+            let publicSize = try groth16PublicSizeForZkeyFile(
+                zkeyPath: zkeyPath,
+                errorBufferSize: errorBufferSize
+            )
+
+            result(publicSize)
+        } catch is RapidsnarkProverError {
+            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Prover error", details: nil))
+        } catch {
+            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Unknown error", details: nil))
+        }
+    }
+
+    private func callGroth16Verify(call: FlutterMethodCall, result: FlutterResult) {
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let proof = args["proof"] as! String
+        let inputs = args["inputs"] as! String
+        let verificationKey = args["verificationKey"] as! String
+
+        do {
+            let isValid = try groth16Verify(
+                proof: proof.data(using: .utf8)!,
+                inputs: inputs.data(using: .utf8)!,
+                verificationKey: verificationKey.data(using: .utf8)!
+            )
+
+            result(isValid)
+        } catch is RapidsnarkVerifierError {
+            result(FlutterError(code: "groth16Verify", message: "Verifier error", details: nil))
+        } catch {
+            result(FlutterError(code: "groth16Verify", message: "Unknown error", details: nil))
+        }
+    }
 }

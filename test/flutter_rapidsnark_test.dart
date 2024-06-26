@@ -20,7 +20,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    FlutterRapidsnark flutterRapidsnarkPlugin = FlutterRapidsnark();
+    Rapidsnark flutterRapidsnarkPlugin = Rapidsnark();
     MockFlutterRapidsnarkPlatform fakePlatform = MockFlutterRapidsnarkPlatform();
     FlutterRapidsnarkPlatform.instance = fakePlatform;
 

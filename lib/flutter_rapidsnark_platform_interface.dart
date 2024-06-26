@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_rapidsnark_method_channel.dart';
@@ -23,7 +25,36 @@ abstract class FlutterRapidsnarkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
+  Future<({String proof, String publicSignals})> groth16Prove({
+    required Uint8List zkey,
+    required Uint8List witness,
+    int proofBufferSize,
+    int? publicBufferSize,
+    int errorBufferSize,
+  });
+
+  Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
+    required String zkeyPath,
+    required Uint8List witness,
+    int proofBufferSize,
+    int? publicBufferSize,
+    int errorBufferSize,
+  });
+
+  Future<bool> groth16Verify({
+    required String proof,
+    required String inputs,
+    required String verificationKey,
+    int errorBufferSize,
+  });
+
+  Future<int> groth16PublicSizeForZkeyBuf({
+    required Uint8List zkey,
+    int errorBufferSize,
+  });
+
+  Future<int> groth16PublicSizeForZkeyFile({
+    required String zkeyPath,
+    int errorBufferSize,
+  });
 }

@@ -1,0 +1,39 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_rapidsnark (0.0.1):
+    - Flutter
+    - rapidsnark (= 0.0.1-alpha.2)
+  - integration_test (0.0.1):
+    - Flutter
+  - rapidsnark (0.0.1-alpha.2):
+    - rapidsnark/rapidsnark (= 0.0.1-alpha.2)
+  - rapidsnark/C (0.0.1-alpha.2)
+  - rapidsnark/rapidsnark (0.0.1-alpha.2):
+    - rapidsnark/C
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_rapidsnark (from `.symlinks/plugins/flutter_rapidsnark/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+
+SPEC REPOS:
+  trunk:
+    - rapidsnark
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_rapidsnark:
+    :path: ".symlinks/plugins/flutter_rapidsnark/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_rapidsnark: 8d4d14caba1d897821d4b9d65f653a94d39e2396
+  integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
+  rapidsnark: 8a0a853dd25abf1505420c4cb8d0f0195f2e1c78
+
+PODFILE CHECKSUM: c6a1a2ce493f1542a1de3f1ef212b74310af6bfd
+
+COCOAPODS: 1.15.2
