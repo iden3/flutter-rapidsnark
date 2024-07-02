@@ -25,14 +25,6 @@ if (flutterVersionName == null) {
 repositories {
     mavenCentral()
     google()
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/iden3/android-rapidsnark")
-        credentials {
-            username = "user_id"
-            password = "token"
-        }
-    }
 }
 
 android {

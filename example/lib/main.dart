@@ -181,7 +181,7 @@ class _MyAppState extends State<MyApp> {
                 Text(_verificationResult),
                 ElevatedButton(
                   onPressed: _runVerifier,
-                  child: Text('Run verifier'),
+                  child: const Text('Run verifier'),
                 ),
               ],
             ),

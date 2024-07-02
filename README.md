@@ -1,4 +1,4 @@
-# flutter-rapidsnark
+# flutter_rapidsnark
 
 ---
 
@@ -109,5 +109,5 @@ Check out the [example app](./example) and [example README](./example/README.md)
 
 ## License
 
-flutter-rapidsnark is part of the iden3 project 0KIMS association. Please check the [COPYING](./COPYING) file for
+flutter_rapidsnark is part of the iden3 project 0KIMS association. Please check the [LICENSE](./LICENSE) file for
 more details.
