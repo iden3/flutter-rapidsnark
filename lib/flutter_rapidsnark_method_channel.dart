@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 
 import 'flutter_rapidsnark_platform_interface.dart';
 
-const DEFAULT_PROOF_BUFFER_SIZE = 1024;
-const DEFAULT_ERROR_BUFFER_SIZE = 256;
+const _defaultProofBufferSize = 1024;
+const _defaultErrorBufferSize = 256;
 
 /// An implementation of [FlutterRapidsnarkPlatform] that uses method channels.
 class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
@@ -16,9 +16,9 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   Future<({String proof, String publicSignals})> groth16Prove({
     required Uint8List zkey,
     required Uint8List witness,
-    int proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
+    int proofBufferSize = _defaultProofBufferSize,
     int? publicBufferSize,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final actualPublicBufferSize = publicBufferSize ??
         await groth16PublicSizeForZkeyBuf(
@@ -45,9 +45,9 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
-    int proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
+    int proofBufferSize = _defaultProofBufferSize,
     int? publicBufferSize,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final actualPublicBufferSize = publicBufferSize ??
         await groth16PublicSizeForZkeyFile(
@@ -73,7 +73,7 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   @override
   Future<int> groth16PublicSizeForZkeyBuf({
     required Uint8List zkey,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final result = await methodChannel.invokeMethod<int>(
       'groth16PublicSizeForZkeyBuf',
@@ -89,7 +89,7 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   @override
   Future<int> groth16PublicSizeForZkeyFile({
     required String zkeyPath,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final result = await methodChannel.invokeMethod<int>(
       'groth16PublicSizeForZkeyFile',
@@ -107,7 +107,7 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
     required String proof,
     required String inputs,
     required String verificationKey,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final result = await methodChannel.invokeMethod<bool>(
       'groth16Verify',

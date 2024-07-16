@@ -2,16 +2,16 @@ import 'dart:typed_data';
 
 import 'flutter_rapidsnark_platform_interface.dart';
 
-const DEFAULT_PROOF_BUFFER_SIZE = 1024;
-const DEFAULT_ERROR_BUFFER_SIZE = 256;
+const _defaultProofBufferSize = 1024;
+const _defaultErrorBufferSize = 256;
 
 class Rapidsnark {
   Future<({String proof, String publicSignals})> groth16Prove({
     required Uint8List zkey,
     required Uint8List witness,
-    int proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
+    int proofBufferSize = _defaultProofBufferSize,
     int? publicBufferSize,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) {
     return FlutterRapidsnarkPlatform.instance.groth16Prove(
       zkey: zkey,
@@ -25,9 +25,9 @@ class Rapidsnark {
   Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
-    int proofBufferSize = DEFAULT_PROOF_BUFFER_SIZE,
+    int proofBufferSize = _defaultProofBufferSize,
     int? publicBufferSize,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) {
     return FlutterRapidsnarkPlatform.instance.groth16ProveWithZKeyFilePath(
       zkeyPath: zkeyPath,
@@ -42,7 +42,7 @@ class Rapidsnark {
     required String proof,
     required String inputs,
     required String verificationKey,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) {
     return FlutterRapidsnarkPlatform.instance.groth16Verify(
       proof: proof,
@@ -54,7 +54,7 @@ class Rapidsnark {
 
   Future<int> groth16PublicSizeForZkeyBuf({
     required Uint8List zkey,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) {
     return FlutterRapidsnarkPlatform.instance.groth16PublicSizeForZkeyBuf(
       zkey: zkey,
@@ -64,7 +64,7 @@ class Rapidsnark {
 
   Future<int> groth16PublicSizeForZkeyFile({
     required String zkeyPath,
-    int errorBufferSize = DEFAULT_ERROR_BUFFER_SIZE,
+    int errorBufferSize = _defaultErrorBufferSize,
   }) {
     return FlutterRapidsnarkPlatform.instance.groth16PublicSizeForZkeyFile(
       zkeyPath: zkeyPath,

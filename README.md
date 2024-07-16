@@ -33,9 +33,9 @@ import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 // ...
 
 final zkeyPath = "path/to/zkey";
-final wtns = await File("path/to/wtns").readAsBytes();
+final witness = await File("path/to/wtns").readAsBytes();
 
-final proof = await groth16ProveWithZKeyFilePath(zkeyPath, wtns);
+final proof = await groth16ProveWithZKeyFilePath(zkeyPath, witness);
 ```
 
 #### groth16Verify
@@ -48,10 +48,10 @@ import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 // ...
 
 final zkey = await File("path/to/zkey").readAsBytes();
-final wtns = await File("path/to/wtns").readAsBytes();
+final witness = await File("path/to/wtns").readAsBytes();
 final verificationKey = await File("path/to/verification_key").readAsBytes();
 
-final proof = await groth16Prove(zkey, wtns);
+final proof = await groth16Prove(zkey, witness);
 
 final proofValid = await groth16Verify(proof.proof, proof.publicSignals, verificationKey);
 ```
@@ -70,9 +70,9 @@ import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 // ...
 
 final zkey = await File("path/to/zkey").readAsBytes();
-final wtns = await File("path/to/wtns").readAsBytes();
+final witness = await File("path/to/wtns").readAsBytes();
 
-final proof = await groth16Prove(zkey, wtns);
+final proof = await groth16Prove(zkey, witness);
 ```
 #### groth16PublicSizeForZkeyFile
 
