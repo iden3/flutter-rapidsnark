@@ -2,16 +2,16 @@ PODS:
   - Flutter (1.0.0)
   - flutter_rapidsnark (0.0.1):
     - Flutter
-    - rapidsnark (= 0.0.1-alpha.2)
+    - rapidsnark (= 0.0.1-alpha.4)
   - integration_test (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - rapidsnark (0.0.1-alpha.2):
-    - rapidsnark/rapidsnark (= 0.0.1-alpha.2)
-  - rapidsnark/C (0.0.1-alpha.2)
-  - rapidsnark/rapidsnark (0.0.1-alpha.2):
+  - rapidsnark (0.0.1-alpha.4):
+    - rapidsnark/rapidsnark (= 0.0.1-alpha.4)
+  - rapidsnark/C (0.0.1-alpha.4)
+  - rapidsnark/rapidsnark (0.0.1-alpha.4):
     - rapidsnark/C
 
 DEPENDENCIES:
@@ -36,10 +36,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_rapidsnark: 8d4d14caba1d897821d4b9d65f653a94d39e2396
+  flutter_rapidsnark: c2f2a7ff48da923973affd98982043d6793e73cd
   integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  rapidsnark: 8a0a853dd25abf1505420c4cb8d0f0195f2e1c78
+  rapidsnark: 6cd5f2e7a91ffc8eff9cf43827d34425f72086a3
 
 PODFILE CHECKSUM: c6a1a2ce493f1542a1de3f1ef212b74310af6bfd
 
