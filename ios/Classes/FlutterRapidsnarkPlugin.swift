@@ -18,8 +18,8 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
             callGroth16ProveWithZKeyFilePath(call: call, result: result)
         case "groth16PublicSizeForZkeyBuf":
             callGroth16PublicSizeForZkeyBuf(call: call, result: result)
-        case "groth16PublicSizeForZkeyFilePath":
-            callGroth16PublicSizeForZkeyFilePath(call: call, result: result)
+        case "groth16PublicSizeForZkeyFile":
+            groth16PublicSizeForZkeyFilePath(call: call, result: result)
         case "groth16Verify":
             callGroth16Verify(call: call, result: result)
         default:
@@ -108,7 +108,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func callGroth16PublicSizeForZkeyFilePath(call: FlutterMethodCall, result: FlutterResult) {
+    private func groth16PublicSizeForZkeyFilePath(call: FlutterMethodCall, result: FlutterResult) {
         let args = call.arguments as! Dictionary<String, Any>
 
         let zkeyPath = args["zkeyPath"] as! String
