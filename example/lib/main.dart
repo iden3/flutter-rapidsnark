@@ -90,9 +90,6 @@ class _MyAppState extends State<MyApp> {
           zkeyPath: zkeyPath,
           witness: witness,
         );
-
-        final zkey = File(zkeyPath);
-        zkey.readAsBytes();
       }
 
       stopwatch.stop();
