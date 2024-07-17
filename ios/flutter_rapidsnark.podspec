@@ -18,7 +18,10 @@ A new Flutter project.
   s.platform = :ios, '11.0'
 
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = { 
+    'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
+    'OTHER_LDFLAGS' => ' -force_load $(PODS_TARGET_SRCROOT)/Frameworks/librapidsnark.a -lc++ -lz'
+  }
   s.swift_version = '5.0'
 
   s.dependency 'rapidsnark', '0.0.1-alpha.4'
