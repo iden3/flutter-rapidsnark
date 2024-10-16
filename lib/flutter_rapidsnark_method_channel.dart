@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'flutter_rapidsnark_platform_interface.dart';
+import 'model.dart';
 
 const _defaultProofBufferSize = 1024;
 const _defaultErrorBufferSize = 256;
@@ -13,7 +14,7 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   final methodChannel = const MethodChannel('flutter_rapidsnark');
 
   @override
-  Future<({String proof, String publicSignals})> groth16Prove({
+  Future<ProveResult> groth16Prove({
     required Uint8List zkey,
     required Uint8List witness,
     int proofBufferSize = _defaultProofBufferSize,
@@ -35,14 +36,14 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
       },
     ))!;
 
-    return (
+    return ProveResult(
       proof: result['proof'] as String,
       publicSignals: result['publicSignals'] as String,
     );
   }
 
   @override
-  Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
+  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize = _defaultProofBufferSize,
@@ -64,7 +65,7 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
       },
     ))!;
 
-    return (
+    return ProveResult(
       proof: result['proof'] as String,
       publicSignals: result['publicSignals'] as String,
     );

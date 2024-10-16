@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_rapidsnark_method_channel.dart';
+import 'model.dart';
 
 abstract class FlutterRapidsnarkPlatform extends PlatformInterface {
   /// Constructs a FlutterRapidsnarkPlatform.
@@ -25,7 +26,7 @@ abstract class FlutterRapidsnarkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<({String proof, String publicSignals})> groth16Prove({
+  Future<ProveResult> groth16Prove({
     required Uint8List zkey,
     required Uint8List witness,
     int proofBufferSize,
@@ -33,7 +34,7 @@ abstract class FlutterRapidsnarkPlatform extends PlatformInterface {
     int errorBufferSize,
   });
 
-  Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
+  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize,

@@ -19,7 +19,7 @@ class MockFlutterRapidsnarkPlatform
       Future.value(false);
 
   @override
-  Future<({String proof, String publicSignals})> groth16Prove({
+  Future<ProveResult> groth16Prove({
     required Uint8List zkey,
     required Uint8List witness,
     int proofBufferSize = 16384,
@@ -31,7 +31,7 @@ class MockFlutterRapidsnarkPlatform
   }
 
   @override
-  Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
+  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize = 16384,
