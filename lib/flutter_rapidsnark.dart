@@ -1,12 +1,15 @@
 import 'dart:typed_data';
 
 import 'flutter_rapidsnark_platform_interface.dart';
+import 'model.dart';
+
+export 'model.dart';
 
 const _defaultProofBufferSize = 1024;
 const _defaultErrorBufferSize = 256;
 
 class Rapidsnark {
-  Future<({String proof, String publicSignals})> groth16Prove({
+  Future<ProveResult> groth16Prove({
     required Uint8List zkey,
     required Uint8List witness,
     int proofBufferSize = _defaultProofBufferSize,
@@ -22,7 +25,7 @@ class Rapidsnark {
     );
   }
 
-  Future<({String proof, String publicSignals})> groth16ProveWithZKeyFilePath({
+  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize = _defaultProofBufferSize,

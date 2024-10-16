@@ -72,14 +72,14 @@ class _MyAppState extends State<MyApp> {
   Future<void> _runProver() async {
     String result = "";
     try {
-      final zkey = await this.zkey;
       final witness = await this.witness;
 
       final stopwatch = Stopwatch()..start();
 
-      final ({String proof, String publicSignals}) proof;
+      final ProveResult proof;
 
       if (_bufferProverEnabled) {
+        final zkey = await this.zkey;
         proof = await _flutterRapidsnarkPlugin.groth16Prove(
           zkey: zkey,
           witness: witness,
