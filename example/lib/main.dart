@@ -69,6 +69,7 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'inputs',
                   fileName: _inputsName,
+                  allowedExtension: 'json',
                   onFileSelected: (file) {
                     setState(() {
                       _inputsName = file.name;
@@ -87,6 +88,7 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'circuit',
                   fileName: _zkeyName,
+                  allowedExtension: 'zkey',
                   onFileSelected: (file) {
                     setState(() {
                       _zkeyName = file.name;
@@ -105,6 +107,7 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'witness graph',
                   fileName: _witnessGraphDataName,
+                  allowedExtension: 'wcd',
                   onFileSelected: (file) {
                     setState(() {
                       _witnessGraphDataName = file.name;
@@ -123,6 +126,7 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'verif key',
                   fileName: _verificationKeyName,
+                  allowedExtension: 'json',
                   onFileSelected: (file) {
                     setState(() {
                       _verificationKeyName = file.name;
@@ -141,6 +145,7 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'witness',
                   fileName: _witnessName ?? 'Generated',
+                  allowedExtension: 'wtns',
                   onFileSelected: (file) {
                     setState(() {
                       _witnessName = file.name;
@@ -348,12 +353,14 @@ class _FileSelectionSection extends StatelessWidget {
   final String fileName;
   final void Function(PlatformFile) onFileSelected;
   final void Function() onReset;
+  final String allowedExtension;
 
   const _FileSelectionSection({
     required this.fileTypeName,
     required this.fileName,
     required this.onFileSelected,
     required this.onReset,
+    required this.allowedExtension,
   });
 
   @override
@@ -372,7 +379,7 @@ class _FileSelectionSection extends StatelessWidget {
               onPressed: () {
                 FilePicker.platform.pickFiles(
                   type: FileType.custom,
-                  allowedExtensions: ['json'],
+                  allowedExtensions: [allowedExtension],
                 ).then((result) {
                   if (result != null) {
                     onFileSelected(result.files.single);
