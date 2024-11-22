@@ -1,7 +1,6 @@
 name: flutter_rapidsnark_example
 description: "Demonstrates how to use the flutter_rapidsnark plugin."
-version: 0.0.1-alpha.1+3
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
@@ -14,7 +13,11 @@ dependencies:
     path: ../
 
   cupertino_icons: ^1.0.6
+
+  circom_witnesscalc: ^0.0.1-alpha.1
   path_provider: ^2.1.3
+  share_plus: ^10.1.2
+  file_picker: ^8.1.4
 
 dev_dependencies:
   integration_test:
@@ -28,6 +31,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/circuit_final.zkey
-    - assets/verification_key.json
-    - assets/witness.wtns
+    - assets/authV2.wcd
+    - assets/authV2_inputs.json
+    - assets/authV2.zkey
+    - assets/authV2_verification_key.json
