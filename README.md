@@ -20,7 +20,7 @@ flutter pub add flutter_rapidsnark
 
 ## Usage
 
-#### groth16ProveWithZKeyFilePath
+#### groth16Prove
 
 Function takes path to .zkey file and witness file as [Uint8List] and returns proof and public signals as record.
 
@@ -56,25 +56,7 @@ final proof = await groth16Prove(zkey, witness);
 final proofValid = await groth16Verify(proof.proof, proof.publicSignals, verificationKey);
 ```
 
-#### groth16Prove
-
-Function that takes zkey and witness files as bytes.
-
-`proof` and `pub_signals` are JSON encoded strings.
-
->Large circuits might cause OOM. Use with caution.
-
-```dart
-import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
-
-// ...
-
-final zkey = await File("path/to/zkey").readAsBytes();
-final witness = await File("path/to/wtns").readAsBytes();
-
-final proof = await groth16Prove(zkey, witness);
-```
-#### groth16PublicSizeForZkeyFile
+#### groth16PublicBufferSize
 
 Calculates public buffer size for specified zkey.
 
@@ -88,12 +70,12 @@ final publicBufferSize = await groth16PublicSizeForZkeyFile("path/to/zkey");
 
 ### Public buffer size
 
-Both `groth16Prove` and `groth16ProveWithZKeyFilePath` has an optional `proofBufferSize`, `publicBufferSize` and `errorBufferSize` parameters. If publicBufferSize is too small it will be recalculated automatically by library.
+`groth16Prove` has an optional `proofBufferSize`, `publicBufferSize` and `errorBufferSize` parameters. If publicBufferSize is too small it will be recalculated automatically by library.
 
 These parameters are used to set the size of the buffers used to store the proof, public signals and error.
 
 If you have embedded circuit in the app, it is recommended to calculate the size of the public buffer once and reuse it.
-To calculate the size of public buffer call `groth16ProveWithZKeyFilePath`.
+To calculate the size of public buffer call `groth16Prove`.
 
 ## Troubleshooting
 

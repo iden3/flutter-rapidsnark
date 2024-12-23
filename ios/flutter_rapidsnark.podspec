@@ -23,5 +23,5 @@ Rapidsnark Flutter pod for plugin.
   }
   s.swift_version = '5.0'
 
-  s.dependency 'rapidsnark', '0.0.1-alpha.5'
+  s.dependency 'rapidsnark', '0.0.1-alpha.6'
 end

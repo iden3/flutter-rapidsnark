@@ -37,8 +37,6 @@ class _MyAppState extends State<MyApp> {
   String? _verificationResult;
   int _timestamp = 0;
 
-  bool _bufferProverEnabled = false;
-
   final _flutterRapidsnarkPlugin = Rapidsnark();
 
   @override
@@ -161,20 +159,7 @@ class _MyAppState extends State<MyApp> {
                 ),
 
                 const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Switch(
-                      value: _bufferProverEnabled,
-                      onChanged: (value) {
-                        setState(() {
-                          _bufferProverEnabled = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    const Text('Enable buffer prover'),
-                  ],
-                ),
+
                 Builder(
                   builder: (context) {
                     final proof = _proof;
@@ -286,21 +271,12 @@ class _MyAppState extends State<MyApp> {
 
       final stopwatch = Stopwatch()..start();
 
-      final ProveResult proof;
+      final zkeyPath = await this.zkeyPath;
 
-      if (_bufferProverEnabled) {
-        proof = await _flutterRapidsnarkPlugin.groth16Prove(
-          zkey: _zkey,
-          witness: witness,
-        );
-      } else {
-        final zkeyPath = await this.zkeyPath;
-
-        proof = await _flutterRapidsnarkPlugin.groth16ProveWithZKeyFilePath(
-          zkeyPath: zkeyPath,
-          witness: witness,
-        );
-      }
+      final proof = await _flutterRapidsnarkPlugin.groth16Prove(
+        zkeyPath: zkeyPath,
+        witness: witness,
+      );
 
       stopwatch.stop();
 

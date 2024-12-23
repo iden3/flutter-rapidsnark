@@ -15,35 +15,6 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
 
   @override
   Future<ProveResult> groth16Prove({
-    required Uint8List zkey,
-    required Uint8List witness,
-    int proofBufferSize = _defaultProofBufferSize,
-    int? publicBufferSize,
-    int errorBufferSize = _defaultErrorBufferSize,
-  }) async {
-    final actualPublicBufferSize = publicBufferSize ??
-        await groth16PublicSizeForZkeyBuf(
-            zkey: zkey, errorBufferSize: errorBufferSize);
-
-    final result = (await methodChannel.invokeMapMethod<String, dynamic>(
-      'groth16Prove',
-      {
-        "zkey": zkey,
-        "witness": witness,
-        "proofBufferSize": proofBufferSize,
-        "publicBufferSize": actualPublicBufferSize,
-        "errorBufferSize": errorBufferSize,
-      },
-    ))!;
-
-    return ProveResult(
-      proof: result['proof'] as String,
-      publicSignals: result['publicSignals'] as String,
-    );
-  }
-
-  @override
-  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize = _defaultProofBufferSize,
@@ -51,11 +22,11 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
     int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final actualPublicBufferSize = publicBufferSize ??
-        await groth16PublicSizeForZkeyFile(
+        await groth16PublicBufferSize(
             zkeyPath: zkeyPath, errorBufferSize: errorBufferSize);
 
     final result = (await methodChannel.invokeMapMethod<String, dynamic>(
-      'groth16ProveWithZKeyFilePath',
+      'groth16Prove',
       {
         "zkeyPath": zkeyPath,
         "witness": witness,
@@ -72,28 +43,12 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   }
 
   @override
-  Future<int> groth16PublicSizeForZkeyBuf({
-    required Uint8List zkey,
-    int errorBufferSize = _defaultErrorBufferSize,
-  }) async {
-    final result = await methodChannel.invokeMethod<int>(
-      'groth16PublicSizeForZkeyBuf',
-      {
-        "zkey": zkey,
-        "errorBufferSize": errorBufferSize,
-      },
-    );
-
-    return result!;
-  }
-
-  @override
-  Future<int> groth16PublicSizeForZkeyFile({
+  Future<int> groth16PublicBufferSize({
     required String zkeyPath,
     int errorBufferSize = _defaultErrorBufferSize,
   }) async {
     final result = await methodChannel.invokeMethod<int>(
-      'groth16PublicSizeForZkeyFile',
+      'groth16PublicBufferSize',
       {
         "zkeyPath": zkeyPath,
         "errorBufferSize": errorBufferSize,

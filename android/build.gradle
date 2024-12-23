@@ -50,7 +50,7 @@ android {
     }
 
     dependencies {
-        implementation "io.iden3:rapidsnark:0.0.1-alpha.2"
+        implementation "io.iden3:rapidsnark:0.0.1-alpha.3"
 
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
