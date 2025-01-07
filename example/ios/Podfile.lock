@@ -42,7 +42,7 @@ PODS:
     - DKImagePickerController/PhotoGallery
     - Flutter
   - Flutter (1.0.0)
-  - flutter_rapidsnark (0.0.1):
+  - flutter_rapidsnark (0.0.1-beta.1):
     - Flutter
     - rapidsnark (= 0.0.1-beta.1)
   - integration_test (0.0.1):
@@ -103,7 +103,7 @@ SPEC CHECKSUMS:
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_rapidsnark: bcbd9c83acbc7bd3e1fe0aaed4374d1c12eda9b5
+  flutter_rapidsnark: af7dd07d41e177ced6ed329fd1f08f8ff11e7a4d
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   rapidsnark: cd77f2c59e1dafe07482f642145931bea25a056b
@@ -113,4 +113,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 095d9af8b13ecba9b7619a234542d1b32779cac5
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2
