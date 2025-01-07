@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:circom_witnesscalc/circom_witnesscalc.dart';
@@ -24,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   String _inputsName = 'authV2_inputs.json';
   late String _inputs;
   String _zkeyName = 'authV2.zkey';
-  late Uint8List _zkey;
+  late String _zkeyPath;
   String _witnessGraphDataName = 'authV2.wcd';
   late Uint8List _witnessGraphData;
   String _verificationKeyName = 'authV2_verification_key.json';
@@ -43,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     inputs.then((inputs) => _inputs = inputs);
-    _copyZkeyToFs().then((zkey) => _zkey = zkey);
+    _copyZkeyToFs();
     witnessGraphData
         .then((witnessGraphData) => _witnessGraphData = witnessGraphData);
     verificationKey
@@ -68,10 +69,11 @@ class _MyAppState extends State<MyApp> {
                   fileTypeName: 'inputs',
                   fileName: _inputsName,
                   allowedExtension: 'json',
+                  withData: true,
                   onFileSelected: (file) {
                     setState(() {
                       _inputsName = file.name;
-                      _inputs = file.bytes.toString();
+                      _inputs = utf8.decode(file.bytes!);
                     });
                   },
                   onReset: () async {
@@ -86,15 +88,20 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'circuit',
                   fileName: _zkeyName,
-                  allowedExtension: 'zkey',
-                  onFileSelected: (file) {
+                  // Not supported for some reason now
+                  // allowedExtension: 'zkey',
+                  onFileSelected: (file) async {
+                    final tempDir = await getTemporaryDirectory();
+
+                    final tempFile = File('${tempDir.path}/${file.xFile.name}');
+
+                    await file.xFile.saveTo(tempFile.path);
                     setState(() {
-                      _zkeyName = file.name;
-                      _zkey = file.bytes!;
+                      _zkeyName = file.xFile.name;
+                      _zkeyPath = tempFile.path;
                     });
                   },
                   onReset: () async {
-                    _zkey = await zkey;
                     setState(() {
                       _zkeyName = 'authV2.zkey';
                     });
@@ -105,11 +112,15 @@ class _MyAppState extends State<MyApp> {
                 _FileSelectionSection(
                   fileTypeName: 'witness graph',
                   fileName: _witnessGraphDataName,
-                  allowedExtension: 'wcd',
-                  onFileSelected: (file) {
-                    setState(() {
-                      _witnessGraphDataName = file.name;
-                      _witnessGraphData = file.bytes!;
+                  withReadStream: true,
+                  // Not supported for some reason now
+                  // allowedExtension: 'wcd',
+                  onFileSelected: (file) async {
+                    file.xFile.readAsBytes().then((bytes) {
+                      setState(() {
+                        _witnessGraphDataName = file.name;
+                        _witnessGraphData = bytes;
+                      });
                     });
                   },
                   onReset: () async {
@@ -125,6 +136,7 @@ class _MyAppState extends State<MyApp> {
                   fileTypeName: 'verif key',
                   fileName: _verificationKeyName,
                   allowedExtension: 'json',
+                  withData: true,
                   onFileSelected: (file) {
                     setState(() {
                       _verificationKeyName = file.name;
@@ -142,8 +154,10 @@ class _MyAppState extends State<MyApp> {
                 /// Witness
                 _FileSelectionSection(
                   fileTypeName: 'witness',
-                  fileName: _witnessName ?? 'Generated',
-                  allowedExtension: 'wtns',
+                  withData: true,
+                  fileName: _witnessName ?? 'Generated during execution',
+                  // Not supported for some reason now
+                  // allowedExtension: 'wtns',
                   onFileSelected: (file) {
                     setState(() {
                       _witnessName = file.name;
@@ -209,6 +223,8 @@ class _MyAppState extends State<MyApp> {
       await file.writeAsBytes(data.buffer.asInt8List());
     }
 
+    _zkeyPath = file.path;
+
     return data.buffer.asUint8List();
   }
 
@@ -219,7 +235,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<String> get zkeyPath async {
-    final appDocDir = await getApplicationDocumentsDirectory();
+    final appDocDir = await getTemporaryDirectory();
     return "${appDocDir.path}/$_zkeyName";
   }
 
@@ -255,10 +271,16 @@ class _MyAppState extends State<MyApp> {
       if (customWitness != null) {
         witness = customWitness;
       } else {
-        final generatedWitness = await CircomWitnesscalc().calculateWitness(
-          inputs: _inputs,
-          graphData: _witnessGraphData,
-        );
+        Uint8List? generatedWitness;
+
+        try {
+          generatedWitness = await CircomWitnesscalc().calculateWitness(
+            inputs: _inputs,
+            graphData: _witnessGraphData,
+          );
+        } catch (e) {
+          print(e);
+        }
 
         if (generatedWitness == null) {
           setState(() {
@@ -271,10 +293,8 @@ class _MyAppState extends State<MyApp> {
 
       final stopwatch = Stopwatch()..start();
 
-      final zkeyPath = await this.zkeyPath;
-
       final proof = await _flutterRapidsnarkPlugin.groth16Prove(
-        zkeyPath: zkeyPath,
+        zkeyPath: _zkeyPath,
         witness: witness,
       );
 
@@ -329,14 +349,18 @@ class _FileSelectionSection extends StatelessWidget {
   final String fileName;
   final void Function(PlatformFile) onFileSelected;
   final void Function() onReset;
-  final String allowedExtension;
+  final String? allowedExtension;
+  final bool withData;
+  final bool withReadStream;
 
   const _FileSelectionSection({
     required this.fileTypeName,
     required this.fileName,
     required this.onFileSelected,
     required this.onReset,
-    required this.allowedExtension,
+    this.allowedExtension,
+    this.withData = false,
+    this.withReadStream = false,
   });
 
   @override
@@ -353,10 +377,16 @@ class _FileSelectionSection extends StatelessWidget {
           children: [
             OutlinedButton(
               onPressed: () {
-                FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: [allowedExtension],
-                ).then((result) {
+                FilePicker.platform
+                    .pickFiles(
+                  type:
+                      allowedExtension != null ? FileType.custom : FileType.any,
+                  allowedExtensions:
+                      allowedExtension != null ? [allowedExtension!] : null,
+                  withData: withData,
+                  withReadStream: withReadStream,
+                )
+                    .then((result) {
                   if (result != null) {
                     onFileSelected(result.files.single);
                   }

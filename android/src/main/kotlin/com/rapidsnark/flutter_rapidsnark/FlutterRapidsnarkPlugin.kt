@@ -45,7 +45,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
             val publicBufferSize = arguments["publicBufferSize"] as Int
             val errorBufferSize = arguments["errorBufferSize"] as Int
 
-            val proof = groth16ProveWithZKeyFilePath(
+            val proof = groth16Prove(
                 zkeyPath,
                 witnessBytes,
                 proofBufferSize,
@@ -72,7 +72,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
 
             val errorBufferSize = arguments["errorBufferSize"] as Int
 
-            val publicSize = groth16PublicSizeForZkeyFile(
+            val publicSize = groth16PublicBufferSize(
                 zkeyPath,
                 errorBufferSize,
             )

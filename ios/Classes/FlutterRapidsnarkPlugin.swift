@@ -34,7 +34,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
 
         do {
-            let proof = try groth16ProveWithZKeyFilePath(
+            let proof = try groth16Prove(
                 zkeyPath: zkeyPath,
                 witness: witness,
                 proofBufferSize: proofBufferSize,
@@ -47,9 +47,9 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
                 "publicSignals": proof.publicSignals
             ])
         } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16ProveWithZKeyFilePath", message: "Prover error", details: nil))
+            result(FlutterError(code: "groth16Prove", message: "Prover error", details: nil))
         } catch {
-            result(FlutterError(code: "groth16ProveWithZKeyFilePath", message: "Unknown error", details: nil))
+            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: nil))
         }
     }
 

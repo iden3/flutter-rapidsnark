@@ -28,10 +28,9 @@ packages:
   circom_witnesscalc:
     dependency: "direct main"
     description:
-      name: circom_witnesscalc
-      sha256: "7c7c46d92b05eaa4120612073b041e70012230e702e88427cd207544c9b84f10"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../../circom-witnesscalc/circom-witnesscalc-flutter"
+      relative: true
+    source: path
     version: "0.0.1-alpha.1"
   clock:
     dependency: transitive
@@ -145,7 +144,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1-alpha.3"
+    version: "0.0.1-beta.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

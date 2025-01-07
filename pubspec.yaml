@@ -1,6 +1,6 @@
 name: flutter_rapidsnark
 description: "Rapidsnark Flutter Plugin"
-version: 0.0.1-alpha.4
+version: 0.0.1-beta.1
 homepage: https://github.com/iden3/flutter-rapidsnark
 
 environment:

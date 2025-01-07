@@ -35,7 +35,7 @@ import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 final zkeyPath = "path/to/zkey";
 final witness = await File("path/to/wtns").readAsBytes();
 
-final proof = await groth16ProveWithZKeyFilePath(zkeyPath, witness);
+final proof = await groth16Prove(zkeyPath, witness);
 ```
 
 #### groth16Verify
@@ -91,5 +91,11 @@ Check out the [example app](./example) and [example README](./example/README.md)
 
 ## License
 
-flutter_rapidsnark is part of the iden3 project 0KIMS association. Please check the [LICENSE](./LICENSE) file for
-more details.
+The project is licensed under either of
+
+- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE-APACHE`](LICENSE-APACHE))
+- [MIT license](https://opensource.org/licenses/MIT) ([`LICENSE-MIT`](LICENSE-MIT))
+
+at your option.
+
+- **Rapidsnark**  is licensed under the [LGPL-3](https://github.com/iden3/rapidsnark/blob/main/COPYING)
