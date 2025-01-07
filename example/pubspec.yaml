@@ -14,8 +14,7 @@ dependencies:
 
   cupertino_icons: ^1.0.6
 
-  circom_witnesscalc:
-    path: ./../../../circom-witnesscalc/circom-witnesscalc-flutter
+  circom_witnesscalc: ^0.0.1-alpha.1
 
   path_provider: ^2.1.3
   share_plus: ^10.1.2
