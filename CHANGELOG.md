@@ -1,3 +1,10 @@
+## 0.0.1-beta.1 (2025-01-08)
+
+Updated native dependencies.
+Update signature of function groth16Prove
+Removed function groth16ProveWithZKeyFilePath instead groth16Prove should be used
+Library license update to MIT | Apache
+
 ## 0.0.1-alpha.3 (2024-10-16)
 
 Reduced minimum Flutter SDK requirements.
