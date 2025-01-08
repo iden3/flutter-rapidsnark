@@ -65,7 +65,7 @@ import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 
 // ...
 
-final publicBufferSize = await groth16PublicSizeForZkeyFile("path/to/zkey");
+final publicBufferSize = await groth16PublicBufferSize("path/to/zkey");
 ```
 
 ### Public buffer size
