@@ -35,30 +35,11 @@ void main() async {
     ))!;
   });
 
-  testWidgets('Buffer prove and verify test', (tester) async {
-    final Rapidsnark plugin = Rapidsnark();
-    final proof = await plugin.groth16Prove(
-      zkey: zkey,
-      witness: witness,
-    );
-
-    expect(proof.proof, isNotEmpty);
-    expect(proof.publicSignals, isNotEmpty);
-
-    final verify = await plugin.groth16Verify(
-      proof: proof.proof,
-      inputs: proof.publicSignals,
-      verificationKey: verificationKey,
-    );
-
-    expect(verify, isTrue);
-  });
-
-  testWidgets('Path prove and verify test', (tester) async {
+  testWidgets('Prove and verify test', (tester) async {
     final zkeyPath = await _copyZkeyToTempDir(zkey);
 
     final Rapidsnark plugin = Rapidsnark();
-    final proof = await plugin.groth16ProveWithZKeyFilePath(
+    final proof = await plugin.groth16Prove(
       zkeyPath: zkeyPath,
       witness: witness,
     );
@@ -75,19 +56,12 @@ void main() async {
     expect(verify, isTrue);
   });
 
-  testWidgets("Test public buffer size calc from buffer", (tester) async {
-    final Rapidsnark plugin = Rapidsnark();
-    final publicSize = await plugin.groth16PublicSizeForZkeyBuf(zkey: zkey);
-
-    expect(publicSize, isNot(0));
-  });
-
   testWidgets("Test public buffer size calc from file path", (tester) async {
     final zkeyPath = await _copyZkeyToTempDir(zkey);
 
     final Rapidsnark plugin = Rapidsnark();
     final publicSize =
-        await plugin.groth16PublicSizeForZkeyFile(zkeyPath: zkeyPath);
+        await plugin.groth16PublicBufferSize(zkeyPath: zkeyPath);
 
     expect(publicSize, isNot(0));
   });

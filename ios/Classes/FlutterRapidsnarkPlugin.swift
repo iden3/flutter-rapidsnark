@@ -9,55 +9,21 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let instance = FlutterRapidsnarkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
-    
+
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "groth16Prove":
             callGroth16Prove(call: call, result: result)
-        case "groth16ProveWithZKeyFilePath":
-            callGroth16ProveWithZKeyFilePath(call: call, result: result)
-        case "groth16PublicSizeForZkeyBuf":
-            callGroth16PublicSizeForZkeyBuf(call: call, result: result)
-        case "groth16PublicSizeForZkeyFile":
-            groth16PublicSizeForZkeyFilePath(call: call, result: result)
+        case "groth16PublicBufferSize":
+            callGroth16PublicBufferSize(call: call, result: result)
         case "groth16Verify":
             callGroth16Verify(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     private func callGroth16Prove(call: FlutterMethodCall, result: FlutterResult) {
-        let args = call.arguments as! Dictionary<String, Any>
-
-        let zkey = (args["zkey"] as! FlutterStandardTypedData).data
-        let witness = (args["witness"] as! FlutterStandardTypedData).data
-
-        let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
-        let publicBufferSize = (args["publicBufferSize"] as! NSNumber).intValue
-        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
-        
-        do {
-            let proof = try groth16Prove(
-                zkey: zkey,
-                witness: witness,
-                proofBufferSize: proofBufferSize,
-                publicBufferSize: publicBufferSize,
-                errorBufferSize: errorBufferSize
-            )
-            
-            result([
-                "proof": proof.proof,
-                "publicSignals": proof.publicSignals
-            ])
-        } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16Prove", message: "Prover error", details: nil))
-        } catch {
-            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: nil))
-        }
-    }
-
-    private func callGroth16ProveWithZKeyFilePath(call: FlutterMethodCall, result: FlutterResult) {
         let args = call.arguments as! Dictionary<String, Any>
 
         let zkeyPath = args["zkeyPath"] as! String
@@ -68,7 +34,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
 
         do {
-            let proof = try groth16ProveWithZKeyFilePath(
+            let proof = try groth16Prove(
                 zkeyPath: zkeyPath,
                 witness: witness,
                 proofBufferSize: proofBufferSize,
@@ -81,34 +47,13 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
                 "publicSignals": proof.publicSignals
             ])
         } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16ProveWithZKeyFilePath", message: "Prover error", details: nil))
+            result(FlutterError(code: "groth16Prove", message: "Prover error", details: nil))
         } catch {
-            result(FlutterError(code: "groth16ProveWithZKeyFilePath", message: "Unknown error", details: nil))
+            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: nil))
         }
     }
 
-    private func callGroth16PublicSizeForZkeyBuf(call: FlutterMethodCall, result: FlutterResult) {
-        let args = call.arguments as! Dictionary<String, Any>
-
-        let zkey = (args["zkey"] as! FlutterStandardTypedData).data
-
-        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
-
-        do {
-            let publicSize = try groth16PublicSizeForZkeyBuf(
-                zkey: zkey,
-                errorBufferSize: errorBufferSize
-            )
-
-            result(publicSize)
-        } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16PublicSizeForZkeyBuf", message: "Prover error", details: nil))
-        } catch {
-            result(FlutterError(code: "groth16PublicSizeForZkeyBuf", message: "Unknown error", details: nil))
-        }
-    }
-
-    private func groth16PublicSizeForZkeyFilePath(call: FlutterMethodCall, result: FlutterResult) {
+    private func callGroth16PublicBufferSize(call: FlutterMethodCall, result: FlutterResult) {
         let args = call.arguments as! Dictionary<String, Any>
 
         let zkeyPath = args["zkeyPath"] as! String
@@ -116,7 +61,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
 
         do {
-            let publicSize = try groth16PublicSizeForZkeyFile(
+            let publicSize = try groth16PublicBufferSize(
                 zkeyPath: zkeyPath,
                 errorBufferSize: errorBufferSize
             )

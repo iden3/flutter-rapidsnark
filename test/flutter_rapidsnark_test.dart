@@ -20,7 +20,7 @@ class MockFlutterRapidsnarkPlatform
 
   @override
   Future<ProveResult> groth16Prove({
-    required Uint8List zkey,
+    required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize = 16384,
     int? publicBufferSize,
@@ -31,32 +31,11 @@ class MockFlutterRapidsnarkPlatform
   }
 
   @override
-  Future<ProveResult> groth16ProveWithZKeyFilePath({
-    required String zkeyPath,
-    required Uint8List witness,
-    int proofBufferSize = 16384,
-    int? publicBufferSize,
-    int errorBufferSize = 16384,
-  }) {
-    // TODO: implement groth16ProveWithZKeyFilePath
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<int> groth16PublicSizeForZkeyBuf({
-    required Uint8List zkey,
-    int errorBufferSize = 256,
-  }) {
-    // TODO: implement groth16PublicSizeForZkeyBuf
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<int> groth16PublicSizeForZkeyFile({
+  Future<int> groth16PublicBufferSize({
     required String zkeyPath,
     int errorBufferSize = 256,
   }) {
-    // TODO: implement groth16PublicSizeForZkeyFile
+    // TODO: implement groth16PublicBufferSize
     throw UnimplementedError();
   }
 }

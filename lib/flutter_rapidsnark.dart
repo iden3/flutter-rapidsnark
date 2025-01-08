@@ -10,29 +10,13 @@ const _defaultErrorBufferSize = 256;
 
 class Rapidsnark {
   Future<ProveResult> groth16Prove({
-    required Uint8List zkey,
-    required Uint8List witness,
-    int proofBufferSize = _defaultProofBufferSize,
-    int? publicBufferSize,
-    int errorBufferSize = _defaultErrorBufferSize,
-  }) {
-    return FlutterRapidsnarkPlatform.instance.groth16Prove(
-      zkey: zkey,
-      witness: witness,
-      proofBufferSize: proofBufferSize,
-      publicBufferSize: publicBufferSize,
-      errorBufferSize: errorBufferSize,
-    );
-  }
-
-  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize = _defaultProofBufferSize,
     int? publicBufferSize,
     int errorBufferSize = _defaultErrorBufferSize,
   }) {
-    return FlutterRapidsnarkPlatform.instance.groth16ProveWithZKeyFilePath(
+    return FlutterRapidsnarkPlatform.instance.groth16Prove(
       zkeyPath: zkeyPath,
       witness: witness,
       proofBufferSize: proofBufferSize,
@@ -55,21 +39,11 @@ class Rapidsnark {
     );
   }
 
-  Future<int> groth16PublicSizeForZkeyBuf({
-    required Uint8List zkey,
-    int errorBufferSize = _defaultErrorBufferSize,
-  }) {
-    return FlutterRapidsnarkPlatform.instance.groth16PublicSizeForZkeyBuf(
-      zkey: zkey,
-      errorBufferSize: errorBufferSize,
-    );
-  }
-
-  Future<int> groth16PublicSizeForZkeyFile({
+  Future<int> groth16PublicBufferSize({
     required String zkeyPath,
     int errorBufferSize = _defaultErrorBufferSize,
   }) {
-    return FlutterRapidsnarkPlatform.instance.groth16PublicSizeForZkeyFile(
+    return FlutterRapidsnarkPlatform.instance.groth16PublicBufferSize(
       zkeyPath: zkeyPath,
       errorBufferSize: errorBufferSize,
     );

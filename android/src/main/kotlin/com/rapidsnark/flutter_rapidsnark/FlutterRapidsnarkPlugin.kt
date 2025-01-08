@@ -24,9 +24,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "groth16Prove" -> callGroth16Prove(call, result)
-            "groth16ProveWithZKeyFilePath" -> callGroth16ProveWithZKeyFilePath(call, result)
-            "groth16PublicSizeForZkeyBuf" -> callGroth16PublicSizeForZkeyBuf(call, result)
-            "groth16PublicSizeForZkeyFile" -> callGroth16PublicSizeForZkeyFile(call, result)
+            "groth16PublicBufferSize" -> callGroth16PublicBufferSize(call, result)
             "groth16Verify" -> callGroth16Verify(call, result)
             else -> result.notImplemented()
         }
@@ -40,36 +38,6 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
         try {
             val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
 
-            val zkeyBytes = arguments["zkey"] as ByteArray
-            val witnessBytes = arguments["witness"] as ByteArray
-
-            val proofBufferSize = arguments["proofBufferSize"] as Int
-            val publicBufferSize = arguments["publicBufferSize"] as Int
-            val errorBufferSize = arguments["errorBufferSize"] as Int
-
-            val proof = groth16Prove(
-                zkeyBytes,
-                witnessBytes,
-                proofBufferSize,
-                publicBufferSize,
-                errorBufferSize,
-            )
-
-            result.success(
-                mapOf(
-                    "proof" to proof.proof,
-                    "publicSignals" to proof.publicSignals
-                )
-            )
-        } catch (e: Exception) {
-            result.error("groth16Prove", e.message, null)
-        }
-    }
-
-    private fun callGroth16ProveWithZKeyFilePath(call: MethodCall, result: Result) {
-        try {
-            val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
-
             val zkeyPath = arguments["zkeyPath"] as String
             val witnessBytes = arguments["witness"] as ByteArray
 
@@ -77,7 +45,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
             val publicBufferSize = arguments["publicBufferSize"] as Int
             val errorBufferSize = arguments["errorBufferSize"] as Int
 
-            val proof = groth16ProveWithZKeyFilePath(
+            val proof = groth16Prove(
                 zkeyPath,
                 witnessBytes,
                 proofBufferSize,
@@ -96,26 +64,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private fun callGroth16PublicSizeForZkeyBuf(call: MethodCall, result: Result) {
-        try {
-            val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
-
-            val zkeyBytes = arguments["zkey"] as ByteArray
-
-            val errorBufferSize = arguments["errorBufferSize"] as Int
-
-            val publicSize = groth16PublicSizeForZkeyBuf(
-                zkeyBytes,
-                errorBufferSize,
-            )
-
-            result.success(publicSize)
-        } catch (e: Exception) {
-            result.error("groth16PublicSizeForZkeyBuf", e.message, null)
-        }
-    }
-
-    private fun callGroth16PublicSizeForZkeyFile(call: MethodCall, result: Result) {
+    private fun callGroth16PublicBufferSize(call: MethodCall, result: Result) {
         try {
             val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
 
@@ -123,7 +72,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
 
             val errorBufferSize = arguments["errorBufferSize"] as Int
 
-            val publicSize = groth16PublicSizeForZkeyFile(
+            val publicSize = groth16PublicBufferSize(
                 zkeyPath,
                 errorBufferSize,
             )

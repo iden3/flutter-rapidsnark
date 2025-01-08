@@ -27,14 +27,6 @@ abstract class FlutterRapidsnarkPlatform extends PlatformInterface {
   }
 
   Future<ProveResult> groth16Prove({
-    required Uint8List zkey,
-    required Uint8List witness,
-    int proofBufferSize,
-    int? publicBufferSize,
-    int errorBufferSize,
-  });
-
-  Future<ProveResult> groth16ProveWithZKeyFilePath({
     required String zkeyPath,
     required Uint8List witness,
     int proofBufferSize,
@@ -49,12 +41,7 @@ abstract class FlutterRapidsnarkPlatform extends PlatformInterface {
     int errorBufferSize,
   });
 
-  Future<int> groth16PublicSizeForZkeyBuf({
-    required Uint8List zkey,
-    int errorBufferSize,
-  });
-
-  Future<int> groth16PublicSizeForZkeyFile({
+  Future<int> groth16PublicBufferSize({
     required String zkeyPath,
     int errorBufferSize,
   });
