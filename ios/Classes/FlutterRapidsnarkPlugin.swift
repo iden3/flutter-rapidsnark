@@ -30,7 +30,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let witness = (args["witness"] as! FlutterStandardTypedData).data
 
         let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
-        let publicBufferSize = (args["publicBufferSize"] as! NSNumber?)?.intValue
+        let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
 
         do {
