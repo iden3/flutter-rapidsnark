@@ -21,17 +21,13 @@ class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
     int? publicBufferSize,
     int errorBufferSize = _defaultErrorBufferSize,
   }) async {
-    final actualPublicBufferSize = publicBufferSize ??
-        await groth16PublicBufferSize(
-            zkeyPath: zkeyPath, errorBufferSize: errorBufferSize);
-
     final result = (await methodChannel.invokeMapMethod<String, dynamic>(
       'groth16Prove',
       {
         "zkeyPath": zkeyPath,
         "witness": witness,
         "proofBufferSize": proofBufferSize,
-        "publicBufferSize": actualPublicBufferSize,
+        "publicBufferSize": publicBufferSize,
         "errorBufferSize": errorBufferSize,
       },
     ))!;
