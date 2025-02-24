@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_rapidsnark'
-  s.version          = '0.0.1-beta.1'
+  s.version          = '0.0.1-beta.2'
   s.summary          = 'Rapidsnark Flutter pod for plugin.'
   s.description      = <<-DESC
 Rapidsnark Flutter pod for plugin.

@@ -1,3 +1,8 @@
+## 0.0.1-beta.2 (2025-02-24)
+
+Removed duplicated functionality.
+Updated iOS podspec.
+
 ## 0.0.1-beta.1 (2025-01-08)
 
 Updated native dependencies.
