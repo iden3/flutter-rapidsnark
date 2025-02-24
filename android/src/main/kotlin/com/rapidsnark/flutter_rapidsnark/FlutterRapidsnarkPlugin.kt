@@ -42,7 +42,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
             val witnessBytes = arguments["witness"] as ByteArray
 
             val proofBufferSize = arguments["proofBufferSize"] as Int
-            val publicBufferSize = arguments["publicBufferSize"] as Int
+            val publicBufferSize = arguments["publicBufferSize"] as Int?
             val errorBufferSize = arguments["errorBufferSize"] as Int
 
             val proof = groth16Prove(
