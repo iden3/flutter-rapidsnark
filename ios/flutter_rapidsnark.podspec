@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 Rapidsnark Flutter pod for plugin.
                        DESC
   s.homepage         = 'http://example.com'
-  s.license          = { :type => 'Apache-2.0 AND MIT', :file => '../LICENSE-APACHE' }
+  s.license          = { :type => 'Apache-2.0 AND MIT', :file => '../LICENSE' }
 
   s.authors          = {
         'Yaroslav Moria' => 'morya.yaroslav@gmail.com',
