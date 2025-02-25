@@ -1,3 +1,7 @@
+## 0.0.1-beta.3 (2025-02-25)
+
+iOS sim x86_64 support.
+
 ## 0.0.1-beta.2 (2025-02-24)
 
 Removed duplicated functionality.
