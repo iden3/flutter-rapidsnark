@@ -8,6 +8,11 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 import io.iden3.rapidsnark.*
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 /** FlutterRapidsnarkPlugin */
 class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     /// The MethodChannel that will the communication between Flutter and native Android
@@ -35,32 +40,42 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun callGroth16Prove(call: MethodCall, result: Result) {
-        try {
-            val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
+        // Launch a coroutine in the IO dispatcher which is optimized for I/O operations and CPU-intensive work
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
 
-            val zkeyPath = arguments["zkeyPath"] as String
-            val witnessBytes = arguments["witness"] as ByteArray
+                val zkeyPath = arguments["zkeyPath"] as String
+                val witnessBytes = arguments["witness"] as ByteArray
 
-            val proofBufferSize = arguments["proofBufferSize"] as Int
-            val publicBufferSize = arguments["publicBufferSize"] as Int?
-            val errorBufferSize = arguments["errorBufferSize"] as Int
+                val proofBufferSize = arguments["proofBufferSize"] as Int
+                val publicBufferSize = arguments["publicBufferSize"] as Int?
+                val errorBufferSize = arguments["errorBufferSize"] as Int
 
-            val proof = groth16Prove(
-                zkeyPath,
-                witnessBytes,
-                proofBufferSize,
-                publicBufferSize,
-                errorBufferSize,
-            )
-
-            result.success(
-                mapOf(
-                    "proof" to proof.proof,
-                    "publicSignals" to proof.publicSignals
+                // Call the heavy computation function
+                val proof = groth16Prove(
+                    zkeyPath,
+                    witnessBytes,
+                    proofBufferSize,
+                    publicBufferSize,
+                    errorBufferSize,
                 )
-            )
-        } catch (e: Exception) {
-            result.error("groth16ProveWithZKeyFilePath", e.message, null)
+
+                // Switch back to the main thread to return the result
+                withContext(Dispatchers.Main) {
+                    result.success(
+                        mapOf(
+                            "proof" to proof.proof,
+                            "publicSignals" to proof.publicSignals
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                // Switch back to the main thread to return the error
+                withContext(Dispatchers.Main) {
+                    result.error("groth16ProveWithZKeyFilePath", e.message, null)
+                }
+            }
         }
     }
 

@@ -23,7 +23,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func callGroth16Prove(call: FlutterMethodCall, result: FlutterResult) {
+    private func callGroth16Prove(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args = call.arguments as! Dictionary<String, Any>
 
         let zkeyPath = args["zkeyPath"] as! String
@@ -32,24 +32,36 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
         let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
-
-        do {
-            let proof = try groth16Prove(
-                zkeyPath: zkeyPath,
-                witness: witness,
-                proofBufferSize: proofBufferSize,
-                publicBufferSize: publicBufferSize,
-                errorBufferSize: errorBufferSize
-            )
-
-            result([
-                "proof": proof.proof,
-                "publicSignals": proof.publicSignals
-            ])
-        } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16Prove", message: "Prover error", details: nil))
-        } catch {
-            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: nil))
+        
+        // Move the heavy computation to a background thread
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let proof = try groth16Prove(
+                    zkeyPath: zkeyPath,
+                    witness: witness,
+                    proofBufferSize: proofBufferSize,
+                    publicBufferSize: publicBufferSize,
+                    errorBufferSize: errorBufferSize
+                )
+                
+                // Return to main thread to deliver the result
+                DispatchQueue.main.async {
+                    result([
+                        "proof": proof.proof,
+                        "publicSignals": proof.publicSignals
+                    ])
+                }
+            } catch let error as RapidsnarkProverError {
+                // Return to main thread to deliver error
+                DispatchQueue.main.async {
+                    result(FlutterError(code: "groth16Prove", message: error.message, details: nil))
+                }
+            } catch let error {
+                // Return to main thread to deliver error
+                DispatchQueue.main.async {
+                    result(FlutterError(code: "groth16Prove", message: "Unknown error", details: error.localizedDescription))
+                }
+            }
         }
     }
 
@@ -89,9 +101,8 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
             )
 
             result(isValid)
-        } catch is RapidsnarkVerifierError {
-            result(FlutterError(code: "groth16Verify", message: "Verifier error", details: nil))
         } catch {
+            print("\(error)")
             result(FlutterError(code: "groth16Verify", message: "Unknown error", details: nil))
         }
     }
