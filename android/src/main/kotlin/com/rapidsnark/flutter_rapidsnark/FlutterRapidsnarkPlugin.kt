@@ -4,10 +4,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
-
 import io.iden3.rapidsnark.*
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +19,11 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_rapidsnark")
+        val taskQueue = flutterPluginBinding.binaryMessenger.makeBackgroundTaskQueue()
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger,
+            "com.rapidsnark.flutter_rapidsnark",
+            StandardMethodCodec.INSTANCE,
+            taskQueue)
         channel.setMethodCallHandler(this)
     }
 
@@ -40,42 +41,33 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun callGroth16Prove(call: MethodCall, result: Result) {
-        // Launch a coroutine in the IO dispatcher which is optimized for I/O operations and CPU-intensive work
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
+        try {
+            val arguments: Map<String, Any> = call.arguments<Map<String, Any>>()!!
 
-                val zkeyPath = arguments["zkeyPath"] as String
-                val witnessBytes = arguments["witness"] as ByteArray
+            val zkeyPath = arguments["zkeyPath"] as String
+            val witnessBytes = arguments["witness"] as ByteArray
 
-                val proofBufferSize = arguments["proofBufferSize"] as Int
-                val publicBufferSize = arguments["publicBufferSize"] as Int?
-                val errorBufferSize = arguments["errorBufferSize"] as Int
+            val proofBufferSize = arguments["proofBufferSize"] as Int
+            val publicBufferSize = arguments["publicBufferSize"] as Int?
+            val errorBufferSize = arguments["errorBufferSize"] as Int
 
-                // Call the heavy computation function
-                val proof = groth16Prove(
-                    zkeyPath,
-                    witnessBytes,
-                    proofBufferSize,
-                    publicBufferSize,
-                    errorBufferSize,
+            // Call the heavy computation function
+            val proof = groth16Prove(
+                zkeyPath,
+                witnessBytes,
+                proofBufferSize,
+                publicBufferSize,
+                errorBufferSize,
+            )
+
+            result.success(
+                mapOf(
+                    "proof" to proof.proof,
+                    "publicSignals" to proof.publicSignals
                 )
-
-                // Switch back to the main thread to return the result
-                withContext(Dispatchers.Main) {
-                    result.success(
-                        mapOf(
-                            "proof" to proof.proof,
-                            "publicSignals" to proof.publicSignals
-                        )
-                    )
-                }
-            } catch (e: Exception) {
-                // Switch back to the main thread to return the error
-                withContext(Dispatchers.Main) {
-                    result.error("groth16ProveWithZKeyFilePath", e.message, null)
-                }
-            }
+            )
+        } catch (e: Exception) {
+            result.error("groth16ProveWithZKeyFilePath", e.message, null)
         }
     }
 

@@ -11,7 +11,7 @@ const _defaultErrorBufferSize = 256;
 class MethodChannelFlutterRapidsnark extends FlutterRapidsnarkPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('flutter_rapidsnark');
+  final methodChannel = const MethodChannel('com.rapidsnark.flutter_rapidsnark');
 
   @override
   Future<ProveResult> groth16Prove({

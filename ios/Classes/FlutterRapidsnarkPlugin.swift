@@ -5,7 +5,13 @@ import rapidsnark
 
 public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "flutter_rapidsnark", binaryMessenger: registrar.messenger())
+        let taskQueue = registrar.messenger().makeBackgroundTaskQueue?()
+        let channel = FlutterMethodChannel(
+            name: "com.rapidsnark.flutter_rapidsnark",
+            binaryMessenger: registrar.messenger(),
+            codec: FlutterStandardMethodCodec.sharedInstance(),
+            taskQueue: taskQueue
+        )
         let instance = FlutterRapidsnarkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -33,35 +39,23 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
         
-        // Move the heavy computation to a background thread
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let proof = try groth16Prove(
-                    zkeyPath: zkeyPath,
-                    witness: witness,
-                    proofBufferSize: proofBufferSize,
-                    publicBufferSize: publicBufferSize,
-                    errorBufferSize: errorBufferSize
-                )
-                
-                // Return to main thread to deliver the result
-                DispatchQueue.main.async {
-                    result([
-                        "proof": proof.proof,
-                        "publicSignals": proof.publicSignals
-                    ])
-                }
-            } catch let error as RapidsnarkProverError {
-                // Return to main thread to deliver error
-                DispatchQueue.main.async {
-                    result(FlutterError(code: "groth16Prove", message: error.message, details: nil))
-                }
-            } catch let error {
-                // Return to main thread to deliver error
-                DispatchQueue.main.async {
-                    result(FlutterError(code: "groth16Prove", message: "Unknown error", details: error.localizedDescription))
-                }
-            }
+        do {
+            let proof = try groth16Prove(
+                zkeyPath: zkeyPath,
+                witness: witness,
+                proofBufferSize: proofBufferSize,
+                publicBufferSize: publicBufferSize,
+                errorBufferSize: errorBufferSize
+            )
+
+            result([
+                "proof": proof.proof,
+                "publicSignals": proof.publicSignals
+            ])
+        } catch let error as RapidsnarkProverError {
+            result(FlutterError(code: "groth16Prove", message: error.message, details: nil))
+        } catch let error {
+            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: error.localizedDescription))
         }
     }
 
