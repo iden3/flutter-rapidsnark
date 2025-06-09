@@ -1,11 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:circom_witnesscalc/circom_witnesscalc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 import 'package:path_provider/path_provider.dart';

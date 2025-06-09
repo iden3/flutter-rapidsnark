@@ -6,7 +6,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFlutterRapidsnark platform = MethodChannelFlutterRapidsnark();
-  const MethodChannel channel = MethodChannel('flutter_rapidsnark');
+  const MethodChannel channel = MethodChannel('com.rapidsnark.flutter_rapidsnark');
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

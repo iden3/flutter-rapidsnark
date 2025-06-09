@@ -5,7 +5,13 @@ import rapidsnark
 
 public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "flutter_rapidsnark", binaryMessenger: registrar.messenger())
+        let taskQueue = registrar.messenger().makeBackgroundTaskQueue?()
+        let channel = FlutterMethodChannel(
+            name: "com.rapidsnark.flutter_rapidsnark",
+            binaryMessenger: registrar.messenger(),
+            codec: FlutterStandardMethodCodec.sharedInstance(),
+            taskQueue: taskQueue
+        )
         let instance = FlutterRapidsnarkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -23,7 +29,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func callGroth16Prove(call: FlutterMethodCall, result: FlutterResult) {
+    private func callGroth16Prove(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args = call.arguments as! Dictionary<String, Any>
 
         let zkeyPath = args["zkeyPath"] as! String
@@ -32,7 +38,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
         let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue
         let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
-
+        
         do {
             let proof = try groth16Prove(
                 zkeyPath: zkeyPath,
@@ -46,10 +52,10 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
                 "proof": proof.proof,
                 "publicSignals": proof.publicSignals
             ])
-        } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16Prove", message: "Prover error", details: nil))
-        } catch {
-            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: nil))
+        } catch let error as RapidsnarkProverError {
+            result(FlutterError(code: "groth16Prove", message: error.message, details: nil))
+        } catch let error {
+            result(FlutterError(code: "groth16Prove", message: "Unknown error", details: error.localizedDescription))
         }
     }
 
@@ -67,8 +73,8 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
             )
 
             result(publicSize)
-        } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Prover error", details: nil))
+        } catch let error as RapidsnarkProverError {
+            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: error.message, details: nil))
         } catch {
             result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Unknown error", details: nil))
         }
@@ -89,8 +95,8 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
             )
 
             result(isValid)
-        } catch is RapidsnarkVerifierError {
-            result(FlutterError(code: "groth16Verify", message: "Verifier error", details: nil))
+        } catch  let error as RapidsnarkVerifierError {
+            result(FlutterError(code: "groth16Verify", message: error.message, details: nil))
         } catch {
             result(FlutterError(code: "groth16Verify", message: "Unknown error", details: nil))
         }

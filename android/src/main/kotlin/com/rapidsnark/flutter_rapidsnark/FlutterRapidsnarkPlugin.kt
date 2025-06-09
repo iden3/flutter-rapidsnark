@@ -3,9 +3,9 @@ package com.rapidsnark.flutter_rapidsnark
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import io.flutter.plugin.common.StandardMethodCodec
 import io.iden3.rapidsnark.*
 
 /** FlutterRapidsnarkPlugin */
@@ -17,7 +17,11 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_rapidsnark")
+        val taskQueue = flutterPluginBinding.binaryMessenger.makeBackgroundTaskQueue()
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger,
+            "com.rapidsnark.flutter_rapidsnark",
+            StandardMethodCodec.INSTANCE,
+            taskQueue)
         channel.setMethodCallHandler(this)
     }
 
@@ -45,6 +49,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
             val publicBufferSize = arguments["publicBufferSize"] as Int?
             val errorBufferSize = arguments["errorBufferSize"] as Int
 
+            // Call the heavy computation function
             val proof = groth16Prove(
                 zkeyPath,
                 witnessBytes,
