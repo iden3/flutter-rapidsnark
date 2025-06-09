@@ -3,12 +3,10 @@ package com.rapidsnark.flutter_rapidsnark
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import io.flutter.plugin.common.StandardMethodCodec
 import io.iden3.rapidsnark.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /** FlutterRapidsnarkPlugin */
 class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
