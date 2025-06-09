@@ -73,8 +73,8 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
             )
 
             result(publicSize)
-        } catch is RapidsnarkProverError {
-            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Prover error", details: nil))
+        } catch let error as RapidsnarkProverError {
+            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: error.message, details: nil))
         } catch {
             result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Unknown error", details: nil))
         }
@@ -95,8 +95,9 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
             )
 
             result(isValid)
+        } catch  let error as RapidsnarkVerifierError {
+            result(FlutterError(code: "groth16Verify", message: error.message, details: nil))
         } catch {
-            print("\(error)")
             result(FlutterError(code: "groth16Verify", message: "Unknown error", details: nil))
         }
     }
