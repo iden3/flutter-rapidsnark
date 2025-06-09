@@ -1,3 +1,7 @@
+## 0.0.1-beta.4 (2025-06-09)
+
+Proof generation now works in background task queue.
+
 ## 0.0.1-beta.3 (2025-02-25)
 
 iOS sim x86_64 support.
