@@ -3,15 +3,14 @@ import UIKit
 
 import rapidsnark
 
+let channelName = "com.rapidsnark.flutter_rapidsnark"
+
 public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let taskQueue = registrar.messenger().makeBackgroundTaskQueue?()
-        let channel = FlutterMethodChannel(
-            name: "com.rapidsnark.flutter_rapidsnark",
-            binaryMessenger: registrar.messenger(),
-            codec: FlutterStandardMethodCodec.sharedInstance(),
-            taskQueue: taskQueue
-        )
+        let messenger = registrar.messenger()
+        let codec = FlutterStandardMethodCodec.sharedInstance()
+        let taskQueue = messenger.makeBackgroundTaskQueue?()
+        let channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec, taskQueue: taskQueue)
         let instance = FlutterRapidsnarkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }

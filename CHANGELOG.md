@@ -1,3 +1,7 @@
+## 0.0.1-beta.5 (2025-09-22)
+
+Added SPM support for iOS.
+
 ## 0.0.1-beta.4 (2025-06-09)
 
 Proof generation now works in background task queue.
