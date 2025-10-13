@@ -292,10 +292,28 @@ class _MyAppState extends State<MyApp> {
 
       final stopwatch = Stopwatch()..start();
 
-      final proof = await _flutterRapidsnarkPlugin.groth16Prove(
-        zkeyPath: _zkeyPath,
-        witness: witness,
-      );
+      final futures = <Future>[
+        for (int i = 0; i < 5; i++)
+          Future(() async {
+            print(
+                'Starting proof generation $i at ${stopwatch.elapsedMilliseconds}');
+
+            final proof = await _flutterRapidsnarkPlugin.groth16Prove(
+              zkeyPath: _zkeyPath,
+              witness: witness,
+            );
+            print(
+                'Proof generation $i completed at ${stopwatch.elapsedMilliseconds}');
+            return proof;
+          }).catchError((error) {
+            print('Error in proof generation $i: $error');
+            throw error;
+          }),
+      ];
+
+      final results = await Future.wait(futures);
+
+      final proof = results[0];
 
       stopwatch.stop();
 
