@@ -20,9 +20,7 @@ class FlutterRapidsnarkPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     // Executor to allow multiple proving / verifying operations to run concurrently
-    private val executor = Executors.newFixedThreadPool(
-        Runtime.getRuntime().availableProcessors().coerceAtLeast(2)
-    )
+    private val executor = Executors.newCachedThreadPool()
     private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
