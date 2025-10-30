@@ -38,27 +38,14 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
     }
 
     private func callGroth16Prove(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let args = extractArguments(call) else {
-            result(FlutterError(code: "groth16Prove", message: "Invalid arguments (not a map)", details: nil))
-            return
-        }
-        guard let zkeyPath = args["zkeyPath"] as? String else {
-            result(FlutterError(code: "groth16Prove", message: "Missing zkeyPath", details: nil))
-            return
-        }
-        guard let witnessData = (args["witness"] as? FlutterStandardTypedData)?.data else {
-            result(FlutterError(code: "groth16Prove", message: "Missing witness", details: nil))
-            return
-        }
-        guard let proofBufferSize = (args["proofBufferSize"] as? NSNumber)?.intValue else {
-            result(FlutterError(code: "groth16Prove", message: "Missing proofBufferSize", details: nil))
-            return
-        }
-        let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue // optional
-        guard let errorBufferSize = (args["errorBufferSize"] as? NSNumber)?.intValue else {
-            result(FlutterError(code: "groth16Prove", message: "Missing errorBufferSize", details: nil))
-            return
-        }
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let zkeyPath = args["zkeyPath"] as! String
+        let witness = (args["witness"] as! FlutterStandardTypedData).data
+
+        let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
+        let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue
+        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
 
         // Dispatch onto concurrent queue so multiple calls can run in parallel when invoked from Flutter (e.g. Future.wait)
         workQueue.async {
@@ -85,18 +72,10 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
     }
 
     private func callGroth16PublicBufferSize(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let args = extractArguments(call) else {
-            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Invalid arguments (not a map)", details: nil))
-            return
-        }
-        guard let zkeyPath = args["zkeyPath"] as? String else {
-            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Missing zkeyPath", details: nil))
-            return
-        }
-        guard let errorBufferSize = (args["errorBufferSize"] as? NSNumber)?.intValue else {
-            result(FlutterError(code: "groth16PublicSizeForZkeyFilePath", message: "Missing errorBufferSize", details: nil))
-            return
-        }
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let zkeyPath = args["zkeyPath"] as! String
+        let errorBufferSize = (args["errorBufferSize"] as! NSNumber).intValue
 
         workQueue.async {
             do {
@@ -114,18 +93,11 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
     }
 
     private func callGroth16Verify(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let args = extractArguments(call) else {
-            result(FlutterError(code: "groth16Verify", message: "Invalid arguments (not a map)", details: nil))
-            return
-        }
-        guard
-            let proof = args["proof"] as? String,
-            let inputs = args["inputs"] as? String,
-            let verificationKey = args["verificationKey"] as? String
-        else {
-            result(FlutterError(code: "groth16Verify", message: "Missing proof / inputs / verificationKey", details: nil))
-            return
-        }
+        let args = call.arguments as! Dictionary<String, Any>
+
+        let proof = args["proof"] as! String
+        let inputs = args["inputs"] as! String
+        let verificationKey = args["verificationKey"] as! String
 
         workQueue.async {
             do {
