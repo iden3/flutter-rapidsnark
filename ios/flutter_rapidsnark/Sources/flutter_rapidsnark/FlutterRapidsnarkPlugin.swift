@@ -41,7 +41,7 @@ public class FlutterRapidsnarkPlugin: NSObject, FlutterPlugin {
         let args = call.arguments as! Dictionary<String, Any>
 
         let zkeyPath = args["zkeyPath"] as! String
-        let witness = (args["witness"] as! FlutterStandardTypedData).data
+        let witnessData = (args["witness"] as! FlutterStandardTypedData).data
 
         let proofBufferSize = (args["proofBufferSize"] as! NSNumber).intValue
         let publicBufferSize = (args["publicBufferSize"] as? NSNumber)?.intValue
