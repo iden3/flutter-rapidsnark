@@ -1,7 +1,8 @@
-## 0.0.1-beta.5 (2025-10-13)
+## 0.0.1-beta.5 (2025-12-16)
 
 Added SPM support for iOS.
 Made plugin run proof generation on a concurrent background queue.
+Added 16 kB page size support for Android.
 
 ## 0.0.1-beta.4 (2025-06-09)
 
