@@ -199,6 +199,11 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('Run prover'),
                 ),
                 const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () => _runProver(concurrent: true),
+                  child: const Text('Run prover concurrently (5x)'),
+                ),
+                const SizedBox(height: 8),
                 Text(_verificationResult ?? ''),
                 ElevatedButton(
                   onPressed: _runVerifier,
@@ -256,7 +261,7 @@ class _MyAppState extends State<MyApp> {
     return verificationKey;
   }
 
-  Future<void> _runProver() async {
+  Future<void> _runProver({bool concurrent = false}) async {
     setState(() {
       _error = null;
       _proof = null;
@@ -292,10 +297,35 @@ class _MyAppState extends State<MyApp> {
 
       final stopwatch = Stopwatch()..start();
 
-      final proof = await _flutterRapidsnarkPlugin.groth16Prove(
-        zkeyPath: _zkeyPath,
-        witness: witness,
-      );
+      ProveResult proof;
+      if (!concurrent) {
+        proof = await _flutterRapidsnarkPlugin.groth16Prove(
+          zkeyPath: _zkeyPath,
+          witness: witness,
+        );
+      } else {
+        final futures = <Future>[
+          for (int i = 0; i < 5; i++)
+            Future(() async {
+              print(
+                  'Starting proof generation $i at ${stopwatch.elapsedMilliseconds}');
+
+              final proof = await _flutterRapidsnarkPlugin.groth16Prove(
+                zkeyPath: _zkeyPath,
+                witness: witness,
+              );
+              print(
+                  'Proof generation $i completed at ${stopwatch.elapsedMilliseconds}');
+              return proof;
+            }).catchError((error) {
+              print('Error in proof generation $i: $error');
+              throw error;
+            }),
+        ];
+
+        final results = await Future.wait(futures);
+        proof = results[0];
+      }
 
       stopwatch.stop();
 
