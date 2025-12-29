@@ -1,3 +1,8 @@
+## 0.0.1-beta.5 (2025-12-29)
+
+Fixed proof generation.
+Updated Android build system config.
+
 ## 0.0.1-beta.4 (2025-06-09)
 
 Proof generation now works in background task queue.
