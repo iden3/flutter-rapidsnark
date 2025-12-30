@@ -1,4 +1,4 @@
-## 0.0.1-beta.5 (2025-12-29)
+## 0.0.1-beta.6 (2025-12-29)
 
 Added SPM support for iOS.
 Made plugin run proof generation on a concurrent background queue.
