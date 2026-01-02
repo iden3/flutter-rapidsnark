@@ -34,6 +34,13 @@ void main() async {
     ))!;
   });
 
+  tearDownAll(() async {
+    final file = File(zkeyPath);
+    if (file.existsSync()) {
+      await file.delete();
+    }
+  });
+
   testWidgets('Prove and verify test', (tester) async {
     final zkeyPath = await _copyZkeyToTempDir(zkey);
 
