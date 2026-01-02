@@ -89,6 +89,21 @@ If you're getting invalid witness length error - check that your witness file is
 
 Check out the [example app](./example) and [example README](./example/README.md) for a working example.
 
+## Benchmarks
+
+``` 
+cd example
+flutter test integration_test/plugin_integration_test.dart
+```
+
+
+Groth16 proving time:
+
+| Device     | Circuit               | Average Time |
+|------------|-----------------------|--------------|    
+| iPhone 12  | auth(42k constraints) | 478.0 ms     |
+| Pixel 6a   | auth(42k constraints) | 721.8 ms     |
+
 ## License
 
 The project is licensed under either of
