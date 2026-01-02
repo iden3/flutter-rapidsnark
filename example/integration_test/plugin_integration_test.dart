@@ -42,8 +42,6 @@ void main() async {
   });
 
   testWidgets('Prove and verify test', (tester) async {
-    final zkeyPath = await _copyZkeyToTempDir(zkey);
-
     final Rapidsnark plugin = Rapidsnark();
     final proof = await plugin.groth16Prove(
       zkeyPath: zkeyPath,
