@@ -8,26 +8,25 @@ import 'package:integration_test/integration_test.dart';
 import 'package:flutter_rapidsnark/flutter_rapidsnark.dart';
 import 'package:path_provider/path_provider.dart';
 
-const zkeyPath = 'assets/authV2.zkey';
-const inputsPath = 'assets/authV2_inputs.json';
-const wcdPath = 'assets/authV2.wcd';
-const vkPath = 'assets/authV2_verification_key.json';
+const zkeyAssetPath = 'assets/authV2.zkey';
+const inputsAssetPath = 'assets/authV2_inputs.json';
+const wcdAssetPath = 'assets/authV2.wcd';
+const vkAssetPath = 'assets/authV2_verification_key.json';
 
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  Uint8List zkey = Uint8List(0);
-  String inputs = '';
-  Uint8List witnessGraph = Uint8List(0);
-  String verificationKey = '';
-
-  Uint8List witness = Uint8List(0);
+  late String zkeyPath;
+  late String verificationKey;
+  late Uint8List witness;
 
   setUpAll(() async {
-    zkey = (await rootBundle.load(zkeyPath)).buffer.asUint8List();
-    inputs = await rootBundle.loadString(inputsPath);
-    witnessGraph = (await rootBundle.load(wcdPath)).buffer.asUint8List();
-    verificationKey = await rootBundle.loadString(vkPath);
+    final zkey = (await rootBundle.load(zkeyAssetPath)).buffer.asUint8List();
+    final inputs = await rootBundle.loadString(inputsAssetPath);
+    final witnessGraph = (await rootBundle.load(wcdAssetPath)).buffer.asUint8List();
+    verificationKey = await rootBundle.loadString(vkAssetPath);
+
+    zkeyPath = await _copyZkeyToTempDir(zkey);
 
     witness = (await CircomWitnesscalc().calculateWitness(
       inputs: inputs,
@@ -57,8 +56,6 @@ void main() async {
   });
 
   testWidgets("Test public buffer size calc from file path", (tester) async {
-    final zkeyPath = await _copyZkeyToTempDir(zkey);
-
     final Rapidsnark plugin = Rapidsnark();
     final publicSize =
         await plugin.groth16PublicBufferSize(zkeyPath: zkeyPath);
